@@ -1,4 +1,4 @@
-name: Unity Activation
+name: Get Unity License File
 
 on:
   workflow_dispatch:
@@ -6,19 +6,24 @@ on:
 jobs:
   activation:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
 
-      - name: Create Unity activation file
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create activation file
         uses: game-ci/unity-builder@v4
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           unityVersion: 2021.3.43f1
           targetPlatform: StandaloneLinux64
           customParameters: -createManualActivationFile
 
-      - name: Upload activation file
+      - name: Upload ALF
         uses: actions/upload-artifact@v4
         with:
-          name: Unity Activation File
-          path: "*.alf"
+          name: Unity-Activation
+          path: |
+            *.alf
+            **/*.alf
